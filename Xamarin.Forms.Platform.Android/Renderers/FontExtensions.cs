@@ -53,7 +53,55 @@ namespace Xamarin.Forms.Platform.Android
 			{
 				return ToTypeface(fontfamily, attr);
 			}
+		}
 
+		static (bool success, Typeface typeface) TryGetFromAssets(this string fontfamily)
+		{
+			var isAssetfont = IsAssetFontFamily(fontfamily);
+			if (isAssetfont)
+			{
+				return LoadTypefaceFromAsset(fontfamily);
+			}
+
+			var extension = new[]
+			{
+				".ttf",
+				".otf"
+			};
+
+			var folders = new[]
+			{
+				"",
+				"Fonts/",
+				"fonts/",
+			};
+
+			foreach(var ext in extension)
+			{
+				foreach(var folder in folders)
+				{
+					var formated = $"{folder}{fontfamily}{ext}#{fontfamily}";
+					var result = LoadTypefaceFromAsset(formated);
+					if (result.success)
+						return result;
+				}
+			}
+
+			return (false, null);
+		}
+
+		static (bool success, Typeface typeface) LoadTypefaceFromAsset(string fontfamily)
+		{
+			try
+			{
+				var result = Typeface.CreateFromAsset(AApplication.Context.Assets, FontNameToFontFile(fontfamily));
+				return (true, result);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+				return (false, null);
+			}
 		}
 
 		static (bool success, Typeface typeface) TryGetFromAssets(this string fontfamily)

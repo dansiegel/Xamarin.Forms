@@ -294,5 +294,12 @@
   <ItemGroup>
     <Folder Include="Assets\Fonts\" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\CuteFont-Regular.ttf" />
+    <AndroidAsset Include="Assets\Fonts\Dokdo-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Fonts\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
