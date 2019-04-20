@@ -12,6 +12,8 @@ namespace Xamarin.Forms.Platform.UWP
 {
 	public static class FontExtensions
 	{
+		static Dictionary<string, FontFamily> FontFamilies = new Dictionary<string, FontFamily>();
+
 		public static void ApplyFont(this Control self, Font font)
 		{
 			self.FontSize = font.UseNamedSize ? font.NamedSize.GetFontSize() : font.FontSize;
@@ -85,9 +87,17 @@ namespace Xamarin.Forms.Platform.UWP
 		{
 			if (string.IsNullOrWhiteSpace(fontFamily))
 				return (FontFamily)WApplication.Current.Resources["ContentControlThemeFontFamily"];
-			//Try First if it is a system font;
+
+			//Return from Cache!
+			if(FontFamilies.TryGetValue(fontFamily, out var f))
+			{
+				return f;
+			}
+			//Cach this puppy!
 			var formated = string.Join(", ", GetAllFontPossibilities(fontFamily));
-			return new FontFamily(formated);
+			var font = new FontFamily(formated);
+			FontFamilies[fontFamily] = font;
+			return font;
 		}
 
 		static IEnumerable<string> GetAllFontPossibilities(string fontFamily)
