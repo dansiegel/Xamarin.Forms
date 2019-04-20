@@ -41,8 +41,8 @@ namespace Xamarin.Forms.Platform.iOS
 								return result;
 						}
 					}
-
-					result = UIFont.FromName(family, size);
+					var cleasnedFont = CleanseFontName(family);
+					result = UIFont.FromName(cleasnedFont, size);
 					if (result != null)
 						return result;
 				}
@@ -67,6 +67,26 @@ namespace Xamarin.Forms.Platform.iOS
 				return UIFont.BoldSystemFontOfSize(size);
 
 			return UIFont.SystemFontOfSize(size);
+		}
+		static string CleanseFontName(string fontName)
+		{
+			var hashIndex = fontName.IndexOf("#", System.StringComparison.Ordinal);
+			if (hashIndex < 1)
+				return fontName;
+			var font = fontName.Substring(0, hashIndex);
+			var extensions = new[]
+			{
+				".ttf",
+				".otf",
+			};
+			foreach(var ext in extensions)
+			{
+				if(font.EndsWith(ext, System.StringComparison.Ordinal))
+				{
+					return font.Substring(0, font.Length - 4);
+				}
+			}
+			return font;
 		}
 	}
 }

@@ -10,8 +10,6 @@
                     <Image Source="{Binding Value[picture]}" />
                     <StackLayout Orientation="Vertical">
                         <Label Text="{Binding Value[name]}" FontFamily="PTM55FT#PTMono"/>
-                        <Label Text="{Binding Value[name]}" FontFamily="PTM55FT#PT Mono"/>
-                        <Label Text="{Binding Value[twitter]}" FontFamily="Dokdo-Regular"/>
                         <Label Text="{Binding Value[twitter]}" FontFamily="CuteFont-Regular#CuteFont"/>
                     </StackLayout>
                 </StackLayout>
