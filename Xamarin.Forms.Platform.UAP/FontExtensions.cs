@@ -112,7 +112,7 @@ namespace Xamarin.Forms.Platform.UWP
 				".ttf",
 				".otf",
 			};
-			//If 
+			//If the extension is provides, they know what they want!
 			var hasExtension = extensions.Any(fontFamily.Contains);
 			if(hasExtension)
 			{

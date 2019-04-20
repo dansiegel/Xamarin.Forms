@@ -289,6 +289,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\CuteFont-Regular.ttf" />
     <AndroidAsset Include="Assets\Fonts\Dokdo-Regular.ttf" />
+    <AndroidAsset Include="Assets\PTM55FT.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Fonts\" />
