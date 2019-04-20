@@ -76,11 +76,18 @@ namespace Xamarin.Forms.Platform.Android
 				"fonts/",
 			};
 
-			foreach(var ext in extension)
+			var hashIndex = fontfamily.IndexOf('#');
+			//UWP names require Spaces. Sometimes people may use those, "CuteFont-Regular#Cute Font" should be "CuteFont-Regular#CuteFont"
+			var name = hashIndex > 0 ? fontfamily.Substring(hashIndex + 1).Replace(" ","") : fontfamily;
+			//Get the fontFamily name;
+			var fontFamilyName = hashIndex > 0 ? fontfamily.Substring(0, hashIndex) : fontfamily;
+			foreach (var ext in extension)
 			{
 				foreach(var folder in folders)
 				{
-					var formated = $"{folder}{fontfamily}{ext}#{fontfamily}";
+					if (fontFamilyName.EndsWith(ext, StringComparison.Ordinal))
+						fontFamilyName = fontFamilyName.Substring(0, fontFamilyName.Length - 4);
+					var formated = $"{folder}{fontFamilyName}{ext}#{name}";
 					var result = LoadTypefaceFromAsset(formated);
 					if (result.success)
 						return result;
