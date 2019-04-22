@@ -73,20 +73,8 @@ namespace Xamarin.Forms.Platform.iOS
 			var hashIndex = fontName.IndexOf("#", System.StringComparison.Ordinal);
 			if (hashIndex < 1)
 				return fontName;
-			var font = fontName.Substring(0, hashIndex);
-			var extensions = new[]
-			{
-				".ttf",
-				".otf",
-			};
-			foreach(var ext in extensions)
-			{
-				if(font.EndsWith(ext, System.StringComparison.Ordinal))
-				{
-					return font.Substring(0, font.Length - 4);
-				}
-			}
-			return font;
+			return fontName.Substring(hashIndex + 1);
+
 		}
 	}
 }
