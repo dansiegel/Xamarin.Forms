@@ -119,7 +119,7 @@ namespace Xamarin.Forms
 			//this doesn't seem to work
 			using (var value = new TypedValue())
 			{
-				if (context.Theme.ResolveAttribute(Resource.Attribute.TextSize, value, true)) 
+				if (context.Theme.ResolveAttribute(Resource.Attribute.TextSize, value, true))
 				{
 					size = value.Data;
 				}
@@ -315,7 +315,8 @@ namespace Xamarin.Forms
 					Registrar.RegisterAll(new[] {
 						typeof(ExportRendererAttribute),
 						typeof(ExportCellAttribute),
-						typeof(ExportImageSourceHandlerAttribute)
+						typeof(ExportImageSourceHandlerAttribute),
+						typeof(ExportFontAttribute)
 					});
 				}
 			}
@@ -666,7 +667,7 @@ namespace Xamarin.Forms
 
 			public async Task<Stream> GetStreamAsync(Uri uri, CancellationToken cancellationToken)
 			{
-				using (var client = new HttpClient())				
+				using (var client = new HttpClient())
 				{
 					HttpResponseMessage response = await client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
 					if (!response.IsSuccessStatusCode)
@@ -675,9 +676,9 @@ namespace Xamarin.Forms
 						return null;
 					}
 
-					// the HttpResponseMessage needs to be disposed of after the calling code is done with the stream 
+					// the HttpResponseMessage needs to be disposed of after the calling code is done with the stream
 					// otherwise the stream may get disposed before the caller can use it
-					return new StreamWrapper(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), response);					
+					return new StreamWrapper(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), response);
 				}
 			}
 

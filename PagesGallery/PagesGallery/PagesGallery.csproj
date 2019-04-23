@@ -9,4 +9,9 @@
     <ProjectReference Include="..\..\Xamarin.Forms.Platform\Xamarin.Forms.Platform.csproj" />
     <ProjectReference Include="..\..\Xamarin.Forms.Xaml\Xamarin.Forms.Xaml.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <Import Project="..\..\.nuspec\Xamarin.Forms.targets" Condition="'$(BuildingInsideVisualStudio)' == 'true' AND Exists('$(__XFBuildTasksLocation)Xamarin.Forms.Build.Tasks.dll')" />
+  <Import Project="..\..\.nuspec\Xamarin.Forms.targets" Condition="'$(BuildingInsideVisualStudio)' != 'true'" />
 </Project>

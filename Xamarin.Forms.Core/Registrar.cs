@@ -86,7 +86,7 @@ namespace Xamarin.Forms.Internals
 			if (handlerType == null)
 				return null;
 
-			
+
 			return (TRegistrable)DependencyResolver.ResolveOrCreate(handlerType, source, visual?.GetType(), args);
 		}
 
@@ -121,7 +121,7 @@ namespace Xamarin.Forms.Internals
 
 			return GetHandler(type, obj, (obj as IVisualController)?.EffectiveVisual, args) as TOut;
 		}
-		
+
 
 		public Type GetHandlerType(Type viewType) => GetHandlerType(viewType, _defaultVisualType);
 
@@ -193,7 +193,7 @@ namespace Xamarin.Forms.Internals
 				// Only go through this process if we have not registered something for this type;
 				// we don't want RenderWith renderers to override ExportRenderers that are already registered.
 				// Plus, there's no need to do this again if we already have a renderer registered.
-				if (!_handlers.TryGetValue(viewType, out Dictionary<Type, (Type target, short priority)> visualRenderers) || 
+				if (!_handlers.TryGetValue(viewType, out Dictionary<Type, (Type target, short priority)> visualRenderers) ||
 					!(visualRenderers.ContainsKey(visualType) ||
 					  visualRenderers.ContainsKey(_defaultVisualType)))
 				{
@@ -351,10 +351,21 @@ namespace Xamarin.Forms.Internals
 						Log.Warning(nameof(Registrar), "Could not load assembly: {0} for Attibute {1} | Some renderers may not be loaded", assembly.FullName, attrType.FullName);
 						continue;
 					}
-
-					var handlerAttributes = new HandlerAttribute[attributes.Length];
-					Array.Copy(attributes, handlerAttributes, attributes.Length);
-					RegisterRenderers(handlerAttributes);
+					var length = attributes.Length;
+					for (var i = 0; i < length; i++)
+					{
+						var a = attributes[i];
+						var attribute = a as HandlerAttribute;
+						if(attribute == null && (a is ExportFontAttribute fa))
+						{
+							FontRegistrar.Register(fa, assembly);
+						}
+						else
+						{
+							if (attribute.ShouldRegister())
+								Registered.Register(attribute.HandlerType, attribute.TargetType, attribute.SupportedVisuals);
+						}
+					}
 				}
 
 				string resolutionName = assembly.FullName;

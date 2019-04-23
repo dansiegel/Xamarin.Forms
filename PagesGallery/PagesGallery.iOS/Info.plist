@@ -50,11 +50,5 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>PagesGallery</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>CuteFont-Regular.ttf</string>
-		<string>Dokdo-Regular.ttf</string>
-		<string>PTM55FT.ttf</string>
-	</array>
 </dict>
 </plist>
