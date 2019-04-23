@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Xamarin.Forms.Internals;
 using WApplication = Windows.UI.Xaml.Application;
+using Xamarin.Forms.Core;
 
 namespace Xamarin.Forms.Platform.UWP
 {
@@ -112,100 +113,26 @@ namespace Xamarin.Forms.Platform.UWP
 				".ttf",
 				".otf",
 			};
+
+			var fontFile = FontFile.FromString(fontFamily);
 			//If the extension is provides, they know what they want!
-			var hasExtension = extensions.Any(fontFamily.Contains);
+			var hasExtension = !string.IsNullOrWhiteSpace(fontFile.Extension);
 			if(hasExtension)
 			{
 				//Add the path as well for good measusure!
 				if(!fontFamily.StartsWith(path))
 				{
-					yield return $"{path}{fontFamily}";
+					yield return $"{path}{fontFile.FileNameWithExtension()}";
 				}
 			}
 			else
 			{
-
-				var hashIndex = fontFamily.IndexOf('#');
-				//Names sometimes don't have spaces that are required by UWP For example,  "CuteFont-Regular#CuteFont"  should be "CuteFont-Regular#Cute Font"
-				var name = hashIndex > 0 ? fontFamily.Substring(hashIndex + 1) : fontFamily;
-				name = string.Join(' ', GetFontName(name));
-				var fontFamilyName = hashIndex > 0 ? fontFamily.Substring(0, hashIndex) : fontFamily;
 				foreach (var ext in extensions)
 				{
-					var formated = $"{path}{fontFamilyName}{ext}#{name}";
+					var formated = $"{path}{fontFile.FileNameWithExtension(ext}#{fontFile.GetPostScriptNameWithSpaces()}";
 					yield return formated;
 				}
 			}
 		}
-		static IEnumerable<string> GetFontName(string fontFamily)
-		{
-			if(fontFamily.Contains(' '))
-			{
-				yield return fontFamily;
-				//We are done theyhave spaces, they have it handled.
-				yield break;
-			}
-			string currentString = "";
-			char lastCharacter = ' ';
-			var index = fontFamily.LastIndexOf("-");
-			bool multipleCaps = false;
-			var cleansedstring = index > 0 ? fontFamily.Substring(0, index) : fontFamily;
-			foreach (var c in cleansedstring)
-			{
-				//Always break on these characters
-				if (c == '_' || c == '-')
-				{
-					yield return currentString;
-					//Reset everything,
-					currentString = "";
-					lastCharacter = ' ';
-					multipleCaps = false;
-				}
-				else
-				{
-					
-					if (char.IsUpper(c))
-					{
-						//If the last character is lowercase, we are in a new CamelCase font
-						if (char.IsLower(lastCharacter))
-						{
-							yield return currentString;
-							currentString = "";
-							lastCharacter = ' ';
-						}
-						else if (char.IsUpper(lastCharacter))
-						{
-							multipleCaps = true;
-						}
-					}
-
-					//Detect multipl UpperCase letters so we can seperate things like PTSansNarrow into "PT Sans Narrow"
-					else if (multipleCaps && currentString.Length > 1)
-					{
-						var last = currentString.Last();
-						yield return currentString.Substring(0, currentString.Length - 1);
-						//Reset everything so it doesnt do a space
-						multipleCaps = false;
-						lastCharacter = ' ';
-						currentString = last.ToString();
-					}
-					
-					currentString += c;
-					lastCharacter = c;
-				}
-			}
-			//Send what is left!
-			if (!string.IsNullOrWhiteSpace(currentString))
-				yield return currentString.Trim();
-
-		}
-
-		static (bool success, FontFamily fontFamily) LoadFontFamilyFromAssets(string fontFamily)
-		{
-			var font = new FontFamily(fontFamily);
-			var success = fontFamily.Contains(font.Source);
-			return (success, font);
-		}
-
 	}
 }

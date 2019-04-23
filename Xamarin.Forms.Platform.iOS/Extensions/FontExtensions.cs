@@ -3,6 +3,7 @@ using System.Linq;
 using Xamarin.Forms.Internals;
 using UIKit;
 using System;
+using Xamarin.Forms.Core;
 
 namespace Xamarin.Forms.Platform.iOS
 {
@@ -73,38 +74,24 @@ namespace Xamarin.Forms.Platform.iOS
 
 		static string CleanseFontName(string fontName)
 		{
-			var hashIndex = fontName.IndexOf("#", System.StringComparison.Ordinal);
-			//UWP names require Spaces. Sometimes people may use those, "CuteFont-Regular#Cute Font" should be "CuteFont-Regular#CuteFont"
-			var name = hashIndex > 0 ? fontName.Substring(hashIndex + 1).Replace(" ", "") : fontName;
-			//Get the fontFamily name;
-			var fontFamilyName = hashIndex > 0 ? fontName.Substring(0, hashIndex) : fontName;
 
+			var fontFile = FontFile.FromString(fontName);
 
-			var extensions = new[]
+			if (!string.IsNullOrWhiteSpace(fontFile.Extension))
 			{
-				".ttf",
-				".otf",
-			};
-
-			var foundExtension = extensions.
-				FirstOrDefault(x => fontFamilyName.EndsWith(x, StringComparison.OrdinalIgnoreCase));
-
-
-			if (!string.IsNullOrWhiteSpace(foundExtension))
-			{
-				if (FontRegistrar.HasFont(fontFamilyName))
-					return name;
+				if (FontRegistrar.HasFont(fontFile.FileNameWithExtension()))
+					return fontFile.PostScriptName;
 			}
 			else
 			{
-				foreach (var ext in extensions)
+				foreach (var ext in FontFile.Extensions)
 				{
-					var formated = $"{fontFamilyName}{ext}";
+					var formated = fontFile.FileNameWithExtension(ext);
 					if (FontRegistrar.HasFont(formated))
-						return name;
+						return fontFile.PostScriptName;
 				}
 			}
-			return name;
+			return fontFile.PostScriptName;
 		}
 	}
 }

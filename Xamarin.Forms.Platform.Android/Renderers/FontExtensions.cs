@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using Android.Graphics;
+using Xamarin.Forms.Core;
 using Xamarin.Forms.Internals;
 using AApplication = Android.App.Application;
 
@@ -55,19 +56,13 @@ namespace Xamarin.Forms.Platform.Android
 			}
 		}
 
-		static (bool success, Typeface typeface) TryGetFromAssets(this string fontfamily)
+		static (bool success, Typeface typeface) TryGetFromAssets(this string fontName)
 		{
-			var isAssetfont = IsAssetFontFamily(fontfamily);
+			var isAssetfont = IsAssetFontFamily(fontName);
 			if (isAssetfont)
 			{
-				return LoadTypefaceFromAsset(fontfamily);
+				return LoadTypefaceFromAsset(fontName);
 			}
-
-			var extension = new[]
-			{
-				".ttf",
-				".otf"
-			};
 
 			var folders = new[]
 			{
@@ -76,32 +71,44 @@ namespace Xamarin.Forms.Platform.Android
 				"fonts/",
 			};
 
-			var hashIndex = fontfamily.IndexOf('#');
-			//UWP names require Spaces. Sometimes people may use those, "CuteFont-Regular#Cute Font" should be "CuteFont-Regular#CuteFont"
-			var name = hashIndex > 0 ? fontfamily.Substring(hashIndex + 1).Replace(" ","") : fontfamily;
-			//Get the fontFamily name;
-			var fontFamilyName = hashIndex > 0 ? fontfamily.Substring(0, hashIndex) : fontfamily;
-			foreach (var ext in extension)
+
+			//copied text
+
+			var fontFile = FontFile.FromString(fontName);
+
+			if (!string.IsNullOrWhiteSpace(fontFile.Extension))
 			{
-				if (fontFamilyName.EndsWith(ext, StringComparison.Ordinal))
-					fontFamilyName = fontFamilyName.Substring(0, fontFamilyName.Length - 4);
-				//Check if embeded resource
-				if (FontRegistrar.HasFont($"{fontFamilyName}{ext}"))
+				if (FontRegistrar.HasFont(fontFile.FileNameWithExtension()))
 				{
 					//TODO: Clean this up, don't hardcode the path
 					var tmpdir = System.IO.Path.GetTempPath();
-					var filePath = System.IO.Path.Combine(tmpdir, $"{fontFamilyName}{ext}");
-					return (true,Typeface.CreateFromFile(filePath));
+					var filePath = System.IO.Path.Combine(tmpdir, fontFile.FileNameWithExtension());
+					return (true, Typeface.CreateFromFile(filePath));
 				}
-
-
-				foreach(var folder in folders)
+			}
+			else
+			{
+				foreach (var ext in FontFile.Extensions)
 				{
+					var formated = fontFile.FileNameWithExtension(ext);
+					if (FontRegistrar.HasFont(formated))
+					{
+						//TODO: Clean this up, don't hardcode the path
+						var tmpdir = System.IO.Path.GetTempPath();
+						var filePath = System.IO.Path.Combine(tmpdir, formated);
+						return (true, Typeface.CreateFromFile(filePath));
+					}
 
-					var formated = $"{folder}{fontFamilyName}{ext}#{name}";
-					var result = LoadTypefaceFromAsset(formated);
-					if (result.success)
-						return result;
+
+
+					foreach (var folder in folders)
+					{
+						formated = $"{folder}{fontFile.FileNameWithExtension()}#{fontFile.PostScriptName}";
+						var result = LoadTypefaceFromAsset(formated);
+						if (result.success)
+							return result;
+					}
+
 				}
 			}
 
