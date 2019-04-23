@@ -83,10 +83,21 @@ namespace Xamarin.Forms.Platform.Android
 			var fontFamilyName = hashIndex > 0 ? fontfamily.Substring(0, hashIndex) : fontfamily;
 			foreach (var ext in extension)
 			{
+				if (fontFamilyName.EndsWith(ext, StringComparison.Ordinal))
+					fontFamilyName = fontFamilyName.Substring(0, fontFamilyName.Length - 4);
+				//Check if embeded resource
+				if (FontRegistrar.HasFont($"{fontFamilyName}{ext}"))
+				{
+					//TODO: Clean this up, don't hardcode the path
+					var tmpdir = System.IO.Path.GetTempPath();
+					var filePath = System.IO.Path.Combine(tmpdir, $"{fontFamilyName}{ext}");
+					return (true,Typeface.CreateFromFile(filePath));
+				}
+
+
 				foreach(var folder in folders)
 				{
-					if (fontFamilyName.EndsWith(ext, StringComparison.Ordinal))
-						fontFamilyName = fontFamilyName.Substring(0, fontFamilyName.Length - 4);
+
 					var formated = $"{folder}{fontFamilyName}{ext}#{name}";
 					var result = LoadTypefaceFromAsset(formated);
 					if (result.success)
