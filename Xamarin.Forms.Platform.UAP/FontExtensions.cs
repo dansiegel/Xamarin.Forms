@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Media;
 using Xamarin.Forms.Internals;
 using WApplication = Windows.UI.Xaml.Application;
 using Xamarin.Forms.Core;
+using System.IO;
 
 namespace Xamarin.Forms.Platform.UWP
 {
@@ -95,6 +96,7 @@ namespace Xamarin.Forms.Platform.UWP
 				return f;
 			}
 			//Cach this puppy!
+
 			var formated = string.Join(", ", GetAllFontPossibilities(fontFamily));
 			var font = new FontFamily(formated);
 			FontFamilies[fontFamily] = font;
@@ -103,10 +105,6 @@ namespace Xamarin.Forms.Platform.UWP
 
 		static IEnumerable<string> GetAllFontPossibilities(string fontFamily)
 		{
-
-			//Always send the base back
-			yield return fontFamily;
-
 			const string path = "Assets/Fonts/";
 			string[] extensions = new[]
 			{
@@ -117,21 +115,43 @@ namespace Xamarin.Forms.Platform.UWP
 			var fontFile = FontFile.FromString(fontFamily);
 			//If the extension is provides, they know what they want!
 			var hasExtension = !string.IsNullOrWhiteSpace(fontFile.Extension);
-			if(hasExtension)
+			if (hasExtension)
 			{
-				//Add the path as well for good measusure!
-				if(!fontFamily.StartsWith(path))
+				var (hasFont, filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
+				if(hasFont)
+				{
+					var formated = $"{filePath}#{fontFile.GetPostScriptNameWithSpaces()}";
+					yield return formated;
+					yield break;
+				}
+				else
 				{
 					yield return $"{path}{fontFile.FileNameWithExtension()}";
 				}
 			}
-			else
+			foreach (var ext in extensions)
 			{
-				foreach (var ext in extensions)
+				var (hasFont, filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension(ext));
+				if (hasFont)
 				{
-					var formated = $"{path}{fontFile.FileNameWithExtension(ext}#{fontFile.GetPostScriptNameWithSpaces()}";
+					//var formated = $"c:\\{fontFile.FileNameWithExtension(ext)}#{fontFile.GetPostScriptNameWithSpaces()}";
+
+					var formated = $"{filePath}#{fontFile.GetPostScriptNameWithSpaces()}";
 					yield return formated;
+					yield break;
 				}
+			}
+
+
+
+			//Always send the base back
+			yield return fontFamily;
+
+
+			foreach (var ext in extensions)
+			{
+				var formated = $"{path}{fontFile.FileNameWithExtension(ext)}#{fontFile.GetPostScriptNameWithSpaces()}";
+				yield return formated;
 			}
 		}
 	}

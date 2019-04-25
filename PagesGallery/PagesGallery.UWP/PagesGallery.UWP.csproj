@@ -92,10 +92,6 @@
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Assets\Fonts\Dokdo-Regular.ttf" />
-    <Content Include="Assets\Fonts\CuteFont-Regular.ttf" />
-    <Content Include="Assets\Fonts\PT_Sans-Narrow-Web-Regular.ttf" />
-    <Content Include="Assets\Fonts\PTM55FT.ttf" />
     <None Include="Xamarin.Forms.ControlGallery.WindowsUniversal_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

@@ -56,6 +56,7 @@
     <Compile Include="CollectionView\StructuredItemsViewRenderer.cs" />
     <Compile Include="ColorExtensions.cs" />
     <Compile Include="DispatcherProvider.cs" />
+    <Compile Include="EmbeddedFontLoader.cs" />
     <Compile Include="Extensions\ImageExtensions.cs" />
     <Compile Include="FormsCheckBox.cs" />
     <Compile Include="IImageVisualElementRenderer.cs" />
@@ -313,7 +314,7 @@
     <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
