@@ -7,12 +7,6 @@ namespace Xamarin.Forms.Platform.Android
 {
 	public class EmbeddedFontLoader : IEmbeddedFontLoader
 	{
-		//TODO: Maybe change this;
-
-		static EmbeddedFontLoader()
-		{
-
-		}
 		public (bool success, string filePath) LoadFont(EmbeddedFont font)
 		{
 			var tmpdir = Path.GetTempPath();
