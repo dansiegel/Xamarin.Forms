@@ -3,6 +3,6 @@ namespace Xamarin.Forms
 {
 	public interface IEmbeddedFontLoader
 	{
-		bool LoadFont(EmbeddedFont font);
+		(bool success, string filePath) LoadFont(EmbeddedFont font);
 	}
 }

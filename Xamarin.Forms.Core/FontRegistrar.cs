@@ -18,14 +18,13 @@ namespace Xamarin.Forms.Internals
 		}
 
 		//TODO: Investigate making this Async
-		public static bool HasFont (string font)
+		public static (bool hasFont, string fontPath) HasFont (string font)
 		{
-
 			try
 			{
 				if(!EmbeddedFonts.TryGetValue(font, out var foundFont))
 				{
-					return false;
+					return (false, null);
 				}
 
 				var fontStream = GetEmbeddedResourceStream(foundFont.assembly,font);
@@ -39,7 +38,7 @@ namespace Xamarin.Forms.Internals
 			{
 				Debug.WriteLine(ex);
 			}
-			return false;
+			return (false, null);
 		}
 
 		static Stream GetEmbeddedResourceStream(Assembly assembly, string resourceFileName)

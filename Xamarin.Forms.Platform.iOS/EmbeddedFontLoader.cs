@@ -8,7 +8,7 @@ namespace Xamarin.Forms.Platform.iOS
 {
 	public class EmbeddedFontLoader : IEmbeddedFontLoader
 	{
-		public bool LoadFont(EmbeddedFont font)
+		public (bool success, string filePath) LoadFont(EmbeddedFont font)
 		{
 			try
 			{
@@ -17,14 +17,14 @@ namespace Xamarin.Forms.Platform.iOS
 				var provider = new CGDataProvider(data);
 				var cGFont = CGFont.CreateFromProvider(provider);
 				if (CTFontManager.RegisterGraphicsFont(cGFont, out var error))
-					return true;
+					return (true, null);
 				Debug.WriteLine(error.Description);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Debug.WriteLine(ex);
 			}
-			return false;
+			return (false, null);
 		}
 	}
 }

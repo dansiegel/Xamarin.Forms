@@ -13,26 +13,26 @@ namespace Xamarin.Forms.Platform.Android
 		{
 
 		}
-		public bool LoadFont(EmbeddedFont font)
+		public (bool success, string filePath) LoadFont(EmbeddedFont font)
 		{
 			var tmpdir = Path.GetTempPath();
 			var filePath = Path.Combine(tmpdir, font.FontName);
 			if (File.Exists(filePath))
-				return true;
+				return (true,filePath);
 			try
 			{
 				using (var fileStream = File.Create(filePath))
 				{
 					font.ResourceStream.CopyTo(fileStream);
 				}
-				return true;
+				return (true, filePath);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Debug.WriteLine(ex);
 				File.Delete(filePath);
 			}
-			return false;
+			return (false, null);
 		}
 	}
 }

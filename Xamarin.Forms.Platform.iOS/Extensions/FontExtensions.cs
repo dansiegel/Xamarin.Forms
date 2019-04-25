@@ -79,15 +79,18 @@ namespace Xamarin.Forms.Platform.iOS
 
 			if (!string.IsNullOrWhiteSpace(fontFile.Extension))
 			{
-				if (FontRegistrar.HasFont(fontFile.FileNameWithExtension()))
+				var (hasFont, filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
+				if (hasFont)
 					return fontFile.PostScriptName;
 			}
 			else
 			{
 				foreach (var ext in FontFile.Extensions)
 				{
+
 					var formated = fontFile.FileNameWithExtension(ext);
-					if (FontRegistrar.HasFont(formated))
+					var (hasFont, filePath) = FontRegistrar.HasFont(formated);
+					if (hasFont)
 						return fontFile.PostScriptName;
 				}
 			}
