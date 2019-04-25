@@ -26,7 +26,6 @@ namespace Xamarin.Forms.Platform.UWP
 
 		public static void ApplyFont(this TextBlock self, Font font)
 		{
-			var fontFamily = new FontFamily(font.FontFamily);
 			self.FontSize = font.UseNamedSize ? font.NamedSize.GetFontSize() : font.FontSize;
 			self.FontFamily = font.ToFontFamily();
 			self.FontStyle = font.FontAttributes.HasFlag(FontAttributes.Italic) ? FontStyle.Italic : FontStyle.Normal;
