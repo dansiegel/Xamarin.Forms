@@ -45,7 +45,7 @@ namespace Xamarin.Forms.Core
 
 		static IEnumerable<string> GetFontName(string fontFamily)
 		{
-			if (fontFamily.Contains(' '))
+			if (fontFamily.Contains(" "))
 			{
 				yield return fontFamily;
 				//We are done theyhave spaces, they have it handled.
