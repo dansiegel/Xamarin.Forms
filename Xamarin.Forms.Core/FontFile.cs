@@ -88,7 +88,7 @@ namespace Xamarin.Forms.Core
 					//Detect multipl UpperCase letters so we can seperate things like PTSansNarrow into "PT Sans Narrow"
 					else if (multipleCaps && currentString.Length > 1)
 					{
-						var last = currentString.Last();
+						var last = currentString[currentString.Length - 1];
 						yield return currentString.Substring(0, currentString.Length - 1);
 						//Reset everything so it doesnt do a space
 						multipleCaps = false;
