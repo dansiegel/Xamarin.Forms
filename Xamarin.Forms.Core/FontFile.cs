@@ -48,7 +48,7 @@ namespace Xamarin.Forms.Core
 			if (fontFamily.Contains(" "))
 			{
 				yield return fontFamily;
-				//We are done theyhave spaces, they have it handled.
+				//We are done they have spaces, they have it handled.
 				yield break;
 			}
 			string currentString = "";
@@ -85,7 +85,7 @@ namespace Xamarin.Forms.Core
 						}
 					}
 
-					//Detect multipl UpperCase letters so we can seperate things like PTSansNarrow into "PT Sans Narrow"
+					//Detect multiple UpperCase letters so we can seperate things like PTSansNarrow into "PT Sans Narrow"
 					else if (multipleCaps && currentString.Length > 1)
 					{
 						var last = currentString[currentString.Length - 1];
