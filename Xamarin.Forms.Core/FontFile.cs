@@ -8,7 +8,7 @@ namespace Xamarin.Forms.Core
 	{
 		public string FileName { get; set; }
 		public string Extension { get; set; }
-		public string FileNameWithExtension(string exention) => $"{FileName}{exention}";
+		public string FileNameWithExtension(string extension) => $"{FileName}{extension}";
 		public string FileNameWithExtension() => FileNameWithExtension(Extension);
 		public string PostScriptName { get; set; }
 
@@ -48,15 +48,15 @@ namespace Xamarin.Forms.Core
 			if (fontFamily.Contains(" "))
 			{
 				yield return fontFamily;
-				//We are done they have spaces, they have it handled.
+				//We are done, they have spaces, they have it handled.
 				yield break;
 			}
 			string currentString = "";
 			char lastCharacter = ' ';
 			var index = fontFamily.LastIndexOf("-", StringComparison.Ordinal);
 			bool multipleCaps = false;
-			var cleansedstring = index > 0 ? fontFamily.Substring(0, index) : fontFamily;
-			foreach (var c in cleansedstring)
+			var cleansedString = index > 0 ? fontFamily.Substring(0, index) : fontFamily;
+			foreach (var c in cleansedString)
 			{
 				//Always break on these characters
 				if (c == '_' || c == '-')
@@ -85,7 +85,7 @@ namespace Xamarin.Forms.Core
 						}
 					}
 
-					//Detect multiple UpperCase letters so we can seperate things like PTSansNarrow into "PT Sans Narrow"
+					//Detect multiple UpperCase letters so we can separate things like PTSansNarrow into "PT Sans Narrow"
 					else if (multipleCaps && currentString.Length > 1)
 					{
 						var last = currentString[currentString.Length - 1];
@@ -103,7 +103,6 @@ namespace Xamarin.Forms.Core
 			//Send what is left!
 			if (!string.IsNullOrWhiteSpace(currentString))
 				yield return currentString.Trim();
-
 		}
 	}
 }

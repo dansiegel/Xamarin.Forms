@@ -9,7 +9,7 @@ namespace Xamarin.Forms.Platform.iOS
 {
 	public static partial class FontExtensions
 	{
-		static readonly string DefaultFontName = UIFont.SystemFontOfSize(12).Name;
+		static readonly string _defaultFontName = UIFont.SystemFontOfSize(12).Name;
 
 		public static UIFont ToUIFont(this Font self) => ToNativeFont(self);
 
@@ -20,7 +20,7 @@ namespace Xamarin.Forms.Platform.iOS
 			var bold = (attributes & FontAttributes.Bold) != 0;
 			var italic = (attributes & FontAttributes.Italic) != 0;
 
-			if (family != null && family != DefaultFontName)
+			if (family != null && family != _defaultFontName)
 			{
 				try
 				{
@@ -44,8 +44,8 @@ namespace Xamarin.Forms.Platform.iOS
 						}
 					}
 
-					var cleasnedFont = CleanseFontName(family);
-					result = UIFont.FromName(cleasnedFont, size);
+					var cleansedFont = CleanseFontName(family);
+					result = UIFont.FromName(cleansedFont, size);
 					if (result != null)
 						return result;
 				}
@@ -79,7 +79,7 @@ namespace Xamarin.Forms.Platform.iOS
 
 			if (!string.IsNullOrWhiteSpace(fontFile.Extension))
 			{
-				var (hasFont, filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
+				var (hasFont, _) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
 				if (hasFont)
 					return fontFile.PostScriptName;
 			}

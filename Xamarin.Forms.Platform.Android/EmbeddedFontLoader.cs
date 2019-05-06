@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.IsolatedStorage;
 
 namespace Xamarin.Forms.Platform.Android
 {
@@ -12,7 +11,7 @@ namespace Xamarin.Forms.Platform.Android
 			var tmpdir = Path.GetTempPath();
 			var filePath = Path.Combine(tmpdir, font.FontName);
 			if (File.Exists(filePath))
-				return (true,filePath);
+				return (true, filePath);
 			try
 			{
 				using (var fileStream = File.Create(filePath))

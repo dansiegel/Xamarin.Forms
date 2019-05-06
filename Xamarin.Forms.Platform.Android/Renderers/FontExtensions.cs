@@ -1,5 +1,7 @@
+using Android.Graphics;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Android.Graphics;
 using Xamarin.Forms.Core;
@@ -58,8 +60,8 @@ namespace Xamarin.Forms.Platform.Android
 
 		static (bool success, Typeface typeface) TryGetFromAssets(this string fontName)
 		{
-			var isAssetfont = IsAssetFontFamily(fontName);
-			if (isAssetfont)
+			var isAssetFont = IsAssetFontFamily(fontName);
+			if (isAssetFont)
 			{
 				return LoadTypefaceFromAsset(fontName);
 			}
@@ -94,8 +96,6 @@ namespace Xamarin.Forms.Platform.Android
 					{
 						return (true, Typeface.CreateFromFile(fontPath));
 					}
-
-
 
 					foreach (var folder in folders)
 					{

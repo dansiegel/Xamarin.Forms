@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Xamarin.Forms.Core;
 using Xamarin.Forms.Internals;
 using WApplication = Windows.UI.Xaml.Application;
-using Xamarin.Forms.Core;
-using System.IO;
 
 namespace Xamarin.Forms.Platform.UWP
 {
@@ -50,6 +47,7 @@ namespace Xamarin.Forms.Platform.UWP
 
 		internal static double GetFontSize(this NamedSize size)
 		{
+			// TODO: Hmm, maybe we need to revisit this, since we no longer support Windows Phone OR WinRT.
 			// These are values pulled from the mapped sizes on Windows Phone, WinRT has no equivalent sizes, only intents.
 			switch (size)
 			{
@@ -90,14 +88,14 @@ namespace Xamarin.Forms.Platform.UWP
 				return (FontFamily)WApplication.Current.Resources["ContentControlThemeFontFamily"];
 
 			//Return from Cache!
-			if(FontFamilies.TryGetValue(fontFamily, out var f))
+			if (FontFamilies.TryGetValue(fontFamily, out var f))
 			{
 				return f;
 			}
-			//Cach this puppy!
 
-			var formated = string.Join(", ", GetAllFontPossibilities(fontFamily));
-			var font = new FontFamily(formated);
+			//Cache this puppy!
+			var formatted = string.Join(", ", GetAllFontPossibilities(fontFamily));
+			var font = new FontFamily(formatted);
 			FontFamilies[fontFamily] = font;
 			return font;
 		}
@@ -112,12 +110,12 @@ namespace Xamarin.Forms.Platform.UWP
 			};
 
 			var fontFile = FontFile.FromString(fontFamily);
-			//If the extension is provides, they know what they want!
+			//If the extension is provided, they know what they want!
 			var hasExtension = !string.IsNullOrWhiteSpace(fontFile.Extension);
 			if (hasExtension)
 			{
 				var (hasFont, filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension());
-				if(hasFont)
+				if (hasFont)
 				{
 					var formated = $"{filePath}#{fontFile.GetPostScriptNameWithSpaces()}";
 					yield return formated;
@@ -133,24 +131,19 @@ namespace Xamarin.Forms.Platform.UWP
 				var (hasFont, filePath) = FontRegistrar.HasFont(fontFile.FileNameWithExtension(ext));
 				if (hasFont)
 				{
-					//var formated = $"c:\\{fontFile.FileNameWithExtension(ext)}#{fontFile.GetPostScriptNameWithSpaces()}";
-
-					var formated = $"{filePath}#{fontFile.GetPostScriptNameWithSpaces()}";
-					yield return formated;
+					var formatted = $"{filePath}#{fontFile.GetPostScriptNameWithSpaces()}";
+					yield return formatted;
 					yield break;
 				}
 			}
 
-
-
 			//Always send the base back
 			yield return fontFamily;
 
-
 			foreach (var ext in extensions)
 			{
-				var formated = $"{path}{fontFile.FileNameWithExtension(ext)}#{fontFile.GetPostScriptNameWithSpaces()}";
-				yield return formated;
+				var formatted = $"{path}{fontFile.FileNameWithExtension(ext)}#{fontFile.GetPostScriptNameWithSpaces()}";
+				yield return formatted;
 			}
 		}
 	}

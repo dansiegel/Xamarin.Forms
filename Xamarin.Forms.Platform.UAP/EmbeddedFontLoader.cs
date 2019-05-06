@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using Windows.Storage;
 
 namespace Xamarin.Forms.Platform.UAP
 {
 	public class EmbeddedFontLoader : IEmbeddedFontLoader
 	{
-		const string fontCacheFolderName = "fonts";
+		const string _fontCacheFolderName = "fonts";
 		public (bool success, string filePath) LoadFont(EmbeddedFont font)
 		{
 			try
 			{
-				var t = ApplicationData.Current.LocalFolder.CreateFolderAsync(fontCacheFolderName, CreationCollisionOption.OpenIfExists);
+				var t = ApplicationData.Current.LocalFolder.CreateFolderAsync(_fontCacheFolderName, CreationCollisionOption.OpenIfExists);
 				var tmpdir = t.AsTask().Result;
 
 				var file = tmpdir.TryGetItemAsync(font.FontName).AsTask().Result;
@@ -44,9 +40,9 @@ namespace Xamarin.Forms.Platform.UAP
 					File.Delete(filePath);
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				Console.WriteLine(e);
+				Debug.WriteLine(e);
 			}
 			return (false, null);
 		}
@@ -54,7 +50,7 @@ namespace Xamarin.Forms.Platform.UAP
 		static string CleanseFilePath(string filePath)
 		{
 			var fontName = Path.GetFileName(filePath);
-			filePath = Path.Combine("local", fontCacheFolderName, fontName);
+			filePath = Path.Combine("local", _fontCacheFolderName, fontName);
 			var baseUri = new Uri("ms-appdata://");
 			var uri = new Uri(baseUri, filePath);
 			var relativePath = uri.ToString().TrimEnd('/');

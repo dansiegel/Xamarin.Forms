@@ -18,23 +18,23 @@ namespace Xamarin.Forms.Internals
 		}
 
 		//TODO: Investigate making this Async
-		public static (bool hasFont, string fontPath) HasFont (string font)
+		public static (bool hasFont, string fontPath) HasFont(string font)
 		{
 			try
 			{
-				if(!EmbeddedFonts.TryGetValue(font, out var foundFont))
+				if (!EmbeddedFonts.TryGetValue(font, out var foundFont))
 				{
 					return (false, null);
 				}
 
-				var fontStream = GetEmbeddedResourceStream(foundFont.assembly,font);
+				var fontStream = GetEmbeddedResourceStream(foundFont.assembly, font);
 
 				var type = Registrar.Registered.GetHandlerType(typeof(EmbeddedFont));
 				var fontHandler = (IEmbeddedFontLoader)Activator.CreateInstance(type);
 				return fontHandler.LoadFont(new EmbeddedFont { FontName = font, ResourceStream = fontStream });
 
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				Debug.WriteLine(ex);
 			}
@@ -67,7 +67,5 @@ namespace Xamarin.Forms.Internals
 				return false;
 			return path.Replace(file, "").EndsWith(".", StringComparison.Ordinal);
 		}
-
-
 	}
 }
