@@ -1,4 +1,3 @@
-using Android.Graphics;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -125,62 +124,6 @@ namespace Xamarin.Forms.Platform.Android
 			}
 		}
 
-		static (bool success, Typeface typeface) TryGetFromAssets(this string fontfamily)
-		{
-			var isAssetfont = IsAssetFontFamily(fontfamily);
-			if (isAssetfont)
-			{
-				return LoadTypefaceFromAsset(fontfamily);
-			}
-
-			var extension = new[]
-			{
-				".ttf",
-				".otf"
-			};
-
-			var folders = new[]
-			{
-				"",
-				"Fonts/",
-				"fonts/",
-			};
-
-			var hashIndex = fontfamily.IndexOf('#');
-			//UWP names require Spaces. Sometimes people may use those, "CuteFont-Regular#Cute Font" should be "CuteFont-Regular#CuteFont"
-			var name = hashIndex > 0 ? fontfamily.Substring(hashIndex + 1).Replace(" ","") : fontfamily;
-			//Get the fontFamily name;
-			var fontFamilyName = hashIndex > 0 ? fontfamily.Substring(0, hashIndex) : fontfamily;
-			foreach (var ext in extension)
-			{
-				foreach(var folder in folders)
-				{
-					if (fontFamilyName.EndsWith(ext, StringComparison.Ordinal))
-						fontFamilyName = fontFamilyName.Substring(0, fontFamilyName.Length - 4);
-					var formated = $"{folder}{fontFamilyName}{ext}#{name}";
-					var result = LoadTypefaceFromAsset(formated);
-					if (result.success)
-						return result;
-				}
-			}
-
-			return (false, null);
-		}
-
-		static (bool success, Typeface typeface) LoadTypefaceFromAsset(string fontfamily)
-		{
-			try
-			{
-				var result = Typeface.CreateFromAsset(AApplication.Context.Assets, FontNameToFontFile(fontfamily));
-				return (true, result);
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex);
-				return (false, null);
-			}
-		}
-
 		public static Typeface ToTypeface(this Font self)
 		{
 			if (self.IsDefault || (self.FontAttributes == FontAttributes.None && string.IsNullOrEmpty(self.FontFamily)))
@@ -231,9 +174,8 @@ namespace Xamarin.Forms.Platform.Android
 			}
 			else
 			{
-				//var style = ToTypefaceStyle(fontAttribute);
-				//result = Typeface.Create(fontFamily, style);
-				result = self.FontFamily.ToTypeFace(self.FontAttributes);
+				var style = ToTypefaceStyle(fontAttribute);
+				result = Typeface.Create(fontFamily, style);
 			}
 
 			return result;

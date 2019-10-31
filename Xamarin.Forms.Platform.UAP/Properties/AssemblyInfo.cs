@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Xamarin.Forms;
+using Xamarin.Forms.Platform.UAP;
 using Xamarin.Forms.Platform.UWP;
 
 [assembly: Dependency(typeof(WindowsSerializer))]
@@ -61,6 +62,3 @@ using Xamarin.Forms.Platform.UWP;
 
 //Fonts
 [assembly: ExportRenderer(typeof(EmbeddedFont), typeof(EmbeddedFontLoader))]
-
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
