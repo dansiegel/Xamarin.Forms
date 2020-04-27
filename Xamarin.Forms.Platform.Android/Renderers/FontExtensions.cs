@@ -41,7 +41,7 @@ namespace Xamarin.Forms.Platform.Android
 			return (float)self.FontSize;
 		}
 
-		internal static Typeface ToTypeFace(this string fontfamily, FontAttributes attr = FontAttributes.None)
+		public static Typeface ToTypeFace(this string fontfamily, FontAttributes attr = FontAttributes.None)
 		{
 			fontfamily = fontfamily ?? String.Empty;
 			var result = fontfamily.TryGetFromAssets();
